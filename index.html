@@ -1153,10 +1153,49 @@ Focus on:
 22. Use this alternative script to ensure it runs after everything has loaded:
 23. window.onload = function() {
 24.     // Hides the loader after full page load
-25.     document.getElementById('loader').style.display = 'none';
-26. };
-27. 
-28. 🔍 Troubleshooting Tip:
+25.     document.getElementById('loader').style.display =To replace the loading screen with a simple fade-in effect, follow these steps:
+
+1. Remove the Existing Loader HTML
+Delete the old loading screen code:
+
+<!-- Loading Screen -->
+<div class="loader" id="loader">
+    <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <h3>Loading Portfolio...</h3>
+    </div>
+</div>
+
+2. Add Fade-In Effect with CSS
+Add the following CSS for a smooth fade-in when the page loads:
+
+/* Fade-in Effect */
+body {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+body.fade-in {
+    opacity: 1;
+}
+
+3. Add JavaScript to Trigger the Fade-In
+Insert this script right before the closing </body> tag:
+
+// Apply fade-in effect on page load
+window.addEventListener('load', function() {
+    document.body.classList.add('fade-in');
+});
+
+4. Final Check
+* Save all changes.
+* Clear the browser cache or perform a hard refresh (Ctrl + Shift + R).
+* Visit your portfolio to see the smooth fade-in effect when the page loads.
+
+1. This approach provides a lightweight, elegant transition without the need for a full-screen loader. 'none';
+2. };
+3. 
+4. 🔍 Troubleshooting Tip:
     * This method works better if other scripts are interfering with the load event.
     * If the issue persists, check for other window.onload scripts that might be overwriting this one.
 
