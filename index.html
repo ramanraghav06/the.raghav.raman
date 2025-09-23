@@ -1,118 +1,1175 @@
-<script>
-// Page Loading
+
+# Enhanced Dynamic Portfolio for Raghav Raman
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raghav Raman - Data Engineer Portfolio</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #007bff;
+            --dark-color: #1a1a1a;
+            --light-color: #f8f9fa;
+            --text-color: #333;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: var(--transition);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-color);
+            transition: var(--transition);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            padding: 140px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom center;
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.7s;
+        }
+
+        .hero .description {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.9s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), #0056b3);
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.1s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,123,255,0.3);
+        }
+
+        /* Floating Elements */
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            color: rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 60%; left: 20%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { top: 30%; right: 15%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { top: 70%; right: 10%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        /* Skills Section */
+        .skills-section {
+            background: var(--light-color);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .skill-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .skill-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .project-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .project-card-content {
+            padding: 30px;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .project-card p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--dark-color);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .contact-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .contact-card h3 {
+            margin-bottom: 15px;
+        }
+
+        .contact-card a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-card a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            
+            .mobile-menu {
+                display: flex;
+            }
+            
+            nav ul {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: var(--shadow);
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+            
+            .hero {
+                padding: 120px 0 80px;
+                text-align: center;
+            }
+            
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .hero {
+                padding: 100px 0 60px;
+            }
+            
+            .skill-card,
+            .project-card-content,
+            .contact-card {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <h3>Loading Portfolio...</h3>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">Raghav Raman</div>
+                <nav>
+                    <ul id="nav-menu">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#skills">Skills</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="mobile-menu" id="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="floating-icons">
+            <i class="fas fa-database floating-icon" style="font-size: 4rem;"></i>
+            <i class="fas fa-code floating-icon" style="font-size: 3rem;"></i>
+            <i class="fas fa-chart-line floating-icon" style="font-size: 3.5rem;"></i>
+            <i class="fas fa-cogs floating-icon" style="font-size: 2.5rem;"></i>
+        </div>
+        <div class="container hero-content">
+            <h1>Raghav Raman</h1>
+            <p class="subtitle">Data Engineer | Developer | Problem Solver</p>
+            <p class="description">
+                Passionate about transforming complex data into meaningful insights and building robust ETL pipelines that drive business decisions.
+            </p>
+            <a href="#projects" class="btn">
+                <i class="fas fa-rocket"></i> Explore My Work
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="animate-on-scroll">About Me</h2>
+            <div class="animate-on-scroll" style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <p style="font-size: 1.2em; line-height: 1.8; color: #555;">
+                    I'm a dedicated data engineer with a passion for turning raw data into actionable insights. 
+                    With expertise in SQL, Python, and modern ETL frameworks, I specialize in building scalable 
+                    data pipelines and optimizing database performance. My journey in data engineering has led me 
+                    to work with cutting-edge technologies like Informatica IICS, Snowflake, and Apache Kafka.
+                </p>
+                <br>
+                <p style="font-size: 1.1em; color: #666;">
+                    When I'm not coding, you'll find me exploring philosophical literature and creating 
+                    visual content that combines technology with creativity.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section skills-section">
+        <div class="container">
+            <h2 class="animate-on-scroll">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card animate-on-scroll">
+                    <i class="fas fa-database skill-icon"></i>
+                    <h3>Data Engineering</h3>
+                    <p>SQL Server, Informatica PowerCenter, IICS, SSIS, Data Warehousing, ETL Pipelines, Data Modeling</p>
+                </div>
+                <div class="skill-card animate-on-scroll">
+                    <i class="fas fa-code skill-icon"></i>
+                    <h3>Programming Languages</h3>
+                    <p>Python, SQL, PySpark, JavaScript, Shell Scripting</p>
+                </div>
+                <div class="skill-card animate-on-scroll">
+                    <i class="fas fa-cloud skill-icon"></i>
+                    <h3>Cloud & Big Data</h3>
+                    <p>Snowflake, MongoDB, Apache Kafka, AWS, Azure, Docker, Kubernetes</p>
+                </div>
+                <div class="skill-card animate-on-scroll">
+                    <i class="fas fa-tools skill-icon"></i>
+                    <h3>Tools & Frameworks</h3>
+                    <p>Git, JIRA, Tableau, Power BI, Jupyter, Apache Airflow</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="animate-on-scroll">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card animate-on-scroll">
+                    <div class="project-header">
+                        <i class="fas fa-stream" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <h3>Real-time Data Pipeline</h3>
+                    </div>
+                    <div class="project-card-content">
+                        <p>Built a scalable real-time ETL pipeline using Apache Kafka and PySpark, processing over 1M records per hour with 99.9% uptime and automated error handling.</p>
+                        <a href="#" class="btn" style="font-size: 0.9rem; padding: 10px 25px;">
+                            <i class="fas fa-external-link-alt"></i> View Details
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="project-card animate-on-scroll">
+                    <div class="project-header">
+                        <i class="fas fa-chart-bar" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <h3>Business Intelligence Dashboard</h3>
+                    </div>
+                    <div class="project-card-content">
+                        <p>Designed and implemented interactive BI dashboards using Tableau and Power BI, enabling stakeholders to make data-driven decisions with real-time insights.</p>
+                        <a href="#" class="btn" style="font-size: 0.9rem; padding: 10px 25px;">
+                            <i class="fas fa-external-link-alt"></i> View Details
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="project-card animate-on-scroll">
+                    <div class="project-header">
+                        <i class="fas fa-tachometer-alt" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <h3>Database Performance Optimization</h3>
+                    </div>
+                    <div class="project-card-content">
+                        <p>Optimized SQL Server database performance through index tuning, query optimization, and partitioning strategies, achieving 60% improvement in response times.</p>
+                        <a href="#" class="btn" style="font-size: 0.9rem; padding: 10px 25px;">
+                            <i class="fas fa-external-link-alt"></i> View Details
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="project-card animate-on-scroll">
+                    <div class="project-header">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <h3>Cloud Data Migration</h3>
+                    </div>
+                    <div class="project-card-content">
+                        <p>Led the migration of on-premise data warehouse to Snowflake cloud platform, reducing infrastructure costs by 40% while improving scalability and performance.</p>
+                        <a href="#" class="btn" style="font-size: 0.9rem; padding: 10px 25px;">
+                            <i class="fas fa-external-link-alt"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <h2 class="animate-on-scroll">Let's Connect</h2>
+            <p class="animate-on-scroll" style="font-size: 1.2em; margin-bottom: 40px; opacity: 0.9;">
+                Ready to discuss your next data project? Let's build something amazing together!
+            </p>
+            <div class="contact-grid">
+                <div class="contact-card animate-on-scroll">
+                    <i class="fas fa-envelope contact-icon"></i>
+                    <h3>Email</h3>
+                    <a href="mailto:ramanraghav06@gmail.com">ramanraghav06@gmail.com</a>
+                </div>
+                <div class="contact-card animate-on-scroll">
+                    <i class="fab fa-linkedin contact-icon"></i>
+                    <h3>LinkedIn</h3>
+                    <a href="https://www.linkedin.com/in/ramanraghav06" target="_blank">Connect with me</a>
+                </div>
+                <div class="contact-card animate-on-scroll">
+                    <i class="fab fa-github contact-icon"></i>
+                    <h3>GitHub</h3>
+                    <a href="https://github.com/ramanraghav06" target="_blank">View my repositories</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Raghav Raman. Crafted with <i class="fas fa-heart" style="color: #e74c3c;"></i> and lots of â˜•</p>
+        </div>
+    </footer>
+
+    <script>
+        // Page Loading
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+
+        mobileMenu.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Close mobile menu if open
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header Background on Scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Dynamic Text Animation
+        const titles = [
+            "Data Engineer",
+            "ETL Developer", 
+            "Python Developer",
+            "SQL Expert",
+            "Problem Solver"
+        ];
+        
+        let titleIndex = 0;
+        const titleElement = document.querySelector('.hero .subtitle');
+        
+        function changeTitle() {
+            titleElement.style.opacity = '0';
+            setTimeout(() => {
+                titleIndex = (titleIndex + 1) % titles.length;
+                titleElement.textContent = titles[titleIndex];
+                titleElement.style.opacity = '1';
+            }, 500);
+        }
+        
+        // Change title every 3 seconds
+        setInterval(changeTitle, 3000);
+
+        // Typing Effect for Hero Description
+        const heroDescription = document.querySelector('.hero .description');
+        const originalText = heroDescription.textContent;
+        heroDescription.textContent = '';
+        
+        function typeText(text, element, speed = 50) {
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, speed);
+        }
+        
+        // Start typing effect after page loads
+        setTimeout(() => {
+            typeText(originalText, heroDescription, 30);
+        }, 2000);
+
+        // Skill Cards Hover Effect
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) rotateY(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotateY(0)';
+            });
+        });
+
+        // Project Cards Interactive Effect
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform =🌗 Custom Dark Mode Toggle with Animated Sun/Moon Icons
+Adding animations to the sun and moon icons provides a more engaging and fluid user experience when switching between light and dark modes.
+
+⸻
+✅ 1. Updated HTML for Toggle with Icons
+<!-- Dark Mode Toggle with Animated Icons -->
+<div class="dark-mode-toggle">
+    <label class="switch">
+        <input type="checkbox" id="darkModeToggle">
+        <span class="slider">
+            <i class="icon-sun">☀️</i>
+            <i class="icon-moon">🌙</i>
+        </span>
+    </label>
+</div>
+
+⸻
+✅ 2. CSS for Toggle Switch with Icon Animations
+/* Toggle Container */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+}
+
+/* Toggle Switch Base */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Slider Styling */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: background-color 0.4s ease;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+}
+
+/* Icons for Sun and Moon */
+.icon-sun, .icon-moon {
+    font-size: 18px;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    transform-origin: center;
+}
+
+.icon-moon {
+    opacity: 0; /* Hidden by default */
+    transform: rotate(-90deg); /* Rotated out initially */
+}
+
+/* Toggle Switch Animations */
+input:checked + .slider {
+    background-color: #4a4a4a;
+}
+
+input:checked + .slider .icon-sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5); /* Rotate out and shrink */
+}
+
+input:checked + .slider .icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1); /* Rotate in and grow */
+}
+
+/* Light Mode (Default) */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --placeholder-light: #f0f0f0;
+    --placeholder-dark: #e0e0e0;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --placeholder-light: #2a2a2a;
+    --placeholder-dark: #3c3c3c;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.4s, color 0.4s ease; /* Smooth transition */
+}
+
+⸻
+✅ 3. JavaScript for Theme Toggle with Icon Animations
+const darkModeToggle = document.getElementById('darkModeToggle');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Initialize Theme Based on Saved Preference or System Default
+const currentTheme = localStorage.getItem('theme');
+if (currentTheme === 'dark' || (prefersDarkScheme.matches && !currentTheme)) {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.checked =Since you're hosting your portfolio on GitHub Pages, server-side optimizations like NGINX configurations aren't applicable. However, you can still optimize performance through front-end and GitHub Pages-specific strategies.
+
+🚀 Performance Optimizations for GitHub Pages
+⸻
+✅ 1. Enable GZIP/Brotli Compression (Handled by GitHub)
+GitHub Pages already serves content with GZIP compression. You can verify it using:
+
+curl -I --compressed https://yourusername.github.io
+
+For Brotli (default for HTTPS), GitHub Pages handles it automatically.
+
+⸻
+✅ 2. Optimize Images
+* Use modern image formats (WebP, AVIF):
+
+<picture>
+  <source srcset="image.webp" type="image/webp">
+  <img src="image.jpg" alt="Optimized Image">
+</picture>
+
+* Compress images using TinyPNG or Squoosh.
+* Add lazy loading:
+
+<img src="portfolio-image.webp" loading="lazy" alt="Project Screenshot">
+
+⸻
+✅ 3. Minify CSS, JavaScript, and HTML
+* Minify assets using tools like Minifier or build tools like Webpack.
+
+# Install html-minifier
+npm install -g html-minifier
+
+# Minify HTML
+html-minifier --collapse-whitespace --remove-comments index.html -o index.min.html
+
+* Reference the minified files:
+
+<link rel="stylesheet" href="styles.min.css">
+<script src="scripts.min.js" defer></script>
+
+⸻
+✅ 4. Use a Custom Domain with CDN (Optional)
+If using a custom domain, configure Cloudflare:
+* Free CDN and cache settings.
+* Enable "Auto Minify" for HTML, CSS, JS.
+* Turn on "Brotli Compression."
+
+⸻
+✅ 5. Optimize GitHub Pages Build Configuration
+If you're using Jekyll (default for GitHub Pages):
+* Add this to _config.yml:
+
+markdown: kramdown
+kramdown:
+  input: GFM
+compress_html:
+  clippings: all
+  comments: ["<!--"]
+
+* Install the jekyll-compress-html plugin:
+
+gem install jekyll-compress-html
+
+⸻
+✅ 6. Reduce HTTP Requests
+* Combine CSS/JS files:
+
+cat style1.css style2.css > combined.css
+cat script1.js script2.js > combined.js
+
+* Use SVGs inline instead of external icons:
+
+<svg width="24" height="24"><circle cx="12" cy="12" r="10" stroke="black" fill="none"/></svg>
+
+⸻
+✅ 7. Preload Critical Resources
+Helps load fonts and key files faster:
+
+<link rel="preload" href="/fonts/roboto.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/css/styles.min.css" as="style">
+
+⸻
+✅ 8. Enable Cache-Control Headers via Meta Tags
+Since GitHub Pages doesn’t allow server-side Cache-Control, use meta tags:
+
+<meta http-equiv="Cache-Control" content="max-age=31536000, public">
+
+For JavaScript or CSS files, append versioning to URLs:
+
+<link rel="stylesheet" href="styles.css?v=1.2">
+
+⸻
+✅ 9. Reduce JavaScript Execution
+* Defer non-critical scripts:
+
+<script src="analytics.js" defer></script>
+
+* Use event listeners instead of on-page scripts:
+
 window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  if (!loader) return;
-  loader.style.opacity = '0';
-  setTimeout(() => {
-    loader.style.display = 'none';
-  }, 500);
+    console.log('Page fully loaded');
 });
 
-// Mobile Menu Toggle
-const mobileMenu = document.getElementById('mobile-menu');
-const navMenu = document.getElementById('nav-menu');
-if (mobileMenu && navMenu) {
-  mobileMenu.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    mobileMenu.classList.toggle('active');
-  });
-}
+⸻
+✅ 10. Test and Monitor Performance
+Use tools like:
+* Lighthouse
+* PageSpeed Insights
+* GTmetrix
 
-// Smooth Scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', e => {
-    e.preventDefault();
-    const target = document.querySelector(anchor.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    if (navMenu) navMenu.classList.remove('active');
-  });
-});
+Run Lighthouse in Chrome DevTools:
+* Right-click → Inspect → Lighthouse → Generate Report.
 
-// Scroll Animations
-const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('animated');
-  });
-}, observerOptions);
-document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+Focus on:
+* First Contentful Paint (FCP)
+* Time to Interactive (TTI)
+* Largest Contentful Paint (LCP)
 
-// Header Background on Scroll
-window.addEventListener('scroll', () => {
-  const header = document.querySelector('header');
-  if (!header) return;
-  header.style.background = window.scrollY > 100 ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)';
-});
+⸻
+🚀 Sample Optimized Portfolio Head Section
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="max-age=31536000, public">
 
-// Dynamic Text Animation
-const titles = ["Data Engineer", "ETL Developer", "Python Developer", "SQL Expert", "Problem Solver"];
-let titleIndex = 0;
-const titleElement = document.querySelector('.hero .subtitle');
-function changeTitle() {
-  if (!titleElement) return;
-  titleElement.style.opacity = '0';
-  setTimeout(() => {
-    titleIndex = (titleIndex + 1) % titles.length;
-    titleElement.textContent = titles[titleIndex];
-    titleElement.style.opacity = '1';
-  }, 500);
-}
-setInterval(changeTitle, 3000);
+<link rel="preload" href="/css/styles.min.css" as="style">
+<link rel="stylesheet" href="/css/styles.min.css">
 
-// Typing Effect for Hero Description
-const heroDescription = document.querySelector('.hero .description');
-if (heroDescription) {
-  const originalText = heroDescription.textContent;
-  heroDescription.textContent = '';
-  function typeText(text, element, speed = 30) {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < text.length) {
-        element.textContent += text.charAt(i++);
-      } else {
-        clearInterval(timer);
-      }
-    }, speed);
-  }
-  setTimeout(() => typeText(originalText, heroDescription, 30), 2000);
-}
+<script src="/js/scripts.min.js"JavaScript Fixes for Stuck Loading Issue with Troubleshooting Tips
+1. Ensure the Load Event is Triggering:
+2. This code waits until the entire page (including images) has finished loading before hiding the loader.
+3. window.addEventListener('load', function() { 
+4.     // Select the loader element by its ID and hide it
+5.     document.getElementById('loader').style.display = 'none'; 
+6. });
+7. 
+8. 🔍 Troubleshooting Tip:
+    * Make sure this script is placed just before the closing </body> tag.
+    * If the script is in the <head>, it might run before the DOM is fully loaded.
+9. Check for JavaScript Errors:
+    * Press F12 to open Developer Tools.
+    * Go to the Console tab and look for red error messages.
+10. 🔍 Troubleshooting Tip:
+    * Errors like Uncaught TypeError could mean the #loader doesn’t exist when the script runs.
+    * Fix any other errors that could be stopping JavaScript execution.
+11. Verify the Loader Element:
+12. Ensure the loader in your HTML matches the JavaScript ID:
+13. <div id="loader">Loading...</div>  <!-- Make sure the ID matches the JavaScript -->
+14. 
+15. 🔍 Troubleshooting Tip:
+    * The id must exactly match (id="loader").
+    * Even a small typo (like Loader instead of loader) will prevent the script from working.
+16. Manually Test in Console:
+17. Open the Console (F12) and run this command:
+18. document.getElementById('loader').style.display = 'none'; // Hides the loader instantly
+19. 
+20. 🔍 Troubleshooting Tip:
+    * If the loader disappears, the JavaScript is working, but it may be running too early.
+    * If you get an error like Cannot read property 'style' of null, the ID might be incorrect.
+21. Fix Script Timing Issues:
+22. Use this alternative script to ensure it runs after everything has loaded:
+23. window.onload = function() {
+24.     // Hides the loader after full page load
+25.     document.getElementById('loader').style.display = 'none';
+26. };
+27. 
+28. 🔍 Troubleshooting Tip:
+    * This method works better if other scripts are interfering with the load event.
+    * If the issue persists, check for other window.onload scripts that might be overwriting this one.
 
-// Skill Cards Hover Effect
-document.querySelectorAll('.skill-card').forEach(card => {
-  card.addEventListener('mouseenter', function() {
-    this.style.transform = 'translateY(-15px) rotateY(5deg)';
-  });
-  card.addEventListener('mouseleave', function() {
-    this.style.transform = 'translateY(0) rotateY(0)';
-  });
-});
+After applying these fixes:
+* Refresh the page with Ctrl + Shift + R to clear any cached scripts.
+* Test on different browsers to rule out browser-specific issues.
 
-// Project Cards Interactive Effect
-document.querySelectorAll('.project-card').forEach(card => {
-  card.addEventListener('mousemove', function(e) {
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 10;
-    const rotateY = (centerX - x) / 10;
-    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
-  });
-  card.addEventListener('mouseleave', function() {
-    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-  });
-});
+Let me know how it goes! 🚀 defer></script>
 
-// Parallax effect for hero section (FIXED)
-window.addEventListener('scroll', () => {
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-  const scrolled = window.pageYOffset;
-  const rate = scrolled * -0.5;
-  hero.style.transform = "translateY(" + rate + "px)";
-});
-</script>
+⸻
+💡 Final Tips:
+* Compress images and minify code regularly.
+* Use lazy loading for off-screen content.
+* Test with Lighthouse after each update.
+
+These optimizations will ensure your GitHub Pages site loads faster and delivers an excellent user experience.
