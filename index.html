@@ -990,49 +990,139 @@ const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 const currentTheme = localStorage.getItem('theme');
 if (currentTheme === 'dark' || (prefersDarkScheme.matches && !currentTheme)) {
     document.body.classList.add('dark-mode');
-    darkModeToggle.checked =AA true;
-}
+    darkModeToggle.checked =Since you're hosting your portfolio on GitHub Pages, server-side optimizations like NGINX configurations aren't applicable. However, you can still optimize performance through front-end and GitHub Pages-specific strategies.
 
-// Toggle Theme and Save Preference
-darkModeToggle.addEventListener('change', () => {
-    if (darkModeToggle.checked) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-    }
+🚀 Performance Optimizations for GitHub Pages
+⸻
+✅ 1. Enable GZIP/Brotli Compression (Handled by GitHub)
+GitHub Pages already serves content with GZIP compression. You can verify it using:
+
+curl -I --compressed https://yourusername.github.io
+
+For Brotli (default for HTTPS), GitHub Pages handles it automatically.
+
+⸻
+✅ 2. Optimize Images
+* Use modern image formats (WebP, AVIF):
+
+<picture>
+  <source srcset="image.webp" type="image/webp">
+  <img src="image.jpg" alt="Optimized Image">
+</picture>
+
+* Compress images using TinyPNG or Squoosh.
+* Add lazy loading:
+
+<img src="portfolio-image.webp" loading="lazy" alt="Project Screenshot">
+
+⸻
+✅ 3. Minify CSS, JavaScript, and HTML
+* Minify assets using tools like Minifier or build tools like Webpack.
+
+# Install html-minifier
+npm install -g html-minifier
+
+# Minify HTML
+html-minifier --collapse-whitespace --remove-comments index.html -o index.min.html
+
+* Reference the minified files:
+
+<link rel="stylesheet" href="styles.min.css">
+<script src="scripts.min.js" defer></script>
+
+⸻
+✅ 4. Use a Custom Domain with CDN (Optional)
+If using a custom domain, configure Cloudflare:
+* Free CDN and cache settings.
+* Enable "Auto Minify" for HTML, CSS, JS.
+* Turn on "Brotli Compression."
+
+⸻
+✅ 5. Optimize GitHub Pages Build Configuration
+If you're using Jekyll (default for GitHub Pages):
+* Add this to _config.yml:
+
+markdown: kramdown
+kramdown:
+  input: GFM
+compress_html:
+  clippings: all
+  comments: ["<!--"]
+
+* Install the jekyll-compress-html plugin:
+
+gem install jekyll-compress-html
+
+⸻
+✅ 6. Reduce HTTP Requests
+* Combine CSS/JS files:
+
+cat style1.css style2.css > combined.css
+cat script1.js script2.js > combined.js
+
+* Use SVGs inline instead of external icons:
+
+<svg width="24" height="24"><circle cx="12" cy="12" r="10" stroke="black" fill="none"/></svg>
+
+⸻
+✅ 7. Preload Critical Resources
+Helps load fonts and key files faster:
+
+<link rel="preload" href="/fonts/roboto.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/css/styles.min.css" as="style">
+
+⸻
+✅ 8. Enable Cache-Control Headers via Meta Tags
+Since GitHub Pages doesn’t allow server-side Cache-Control, use meta tags:
+
+<meta http-equiv="Cache-Control" content="max-age=31536000, public">
+
+For JavaScript or CSS files, append versioning to URLs:
+
+<link rel="stylesheet" href="styles.css?v=1.2">
+
+⸻
+✅ 9. Reduce JavaScript Execution
+* Defer non-critical scripts:
+
+<script src="analytics.js" defer></script>
+
+* Use event listeners instead of on-page scripts:
+
+window.addEventListener('load', () => {
+    console.log('Page fully loaded');
 });
 
 ⸻
-🌟 Key Features:
-* Icon Animations: Smooth rotation and scaling effects for sun and moon transitions.
-* Responsive Feedback: Users can visually confirm theme changes instantly.
-* Persistent Preferences: User choices are saved using localStorage.
-* Smooth Transitions: Both the background and icons transition seamlessly for a polished look.
+✅ 10. Test and Monitor Performance
+Use tools like:
+* Lighthouse
+* PageSpeed Insights
+* GTmetrix
 
-This implementation creates an engaging, dynamic feel when switching themes, enhancing the overall user interaction. `translateY(${rate}px)`;
-        });
+Run Lighthouse in Chrome DevTools:
+* Right-click → Inspect → Lighthouse → Generate Report.
 
-        // Console Easter Egg
-        console.log(`
-        ðŸš€ Welcome to Raghav Raman's Portfolio!
-        
-        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        
-        Thanks for checking out my code! 
-        I'm always excited to connect with 
-        fellow developers and data enthusiasts.
-        
-        ðŸ“§ ramanraghav06@gmail.com
-        ðŸ’¼ linkedin.com/in/ramanraghav06
-        ðŸ™ github.com/ramanraghav06
-        
-        Let's build something amazing together!
-        
-        â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-        `);
-    </script>
-</body>
-</html>
-```
+Focus on:
+* First Contentful Paint (FCP)
+* Time to Interactive (TTI)
+* Largest Contentful Paint (LCP)
+
+⸻
+🚀 Sample Optimized Portfolio Head Section
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="max-age=31536000, public">
+
+<link rel="preload" href="/css/styles.min.css" as="style">
+<link rel="stylesheet" href="/css/styles.min.css">
+
+<script src="/js/scripts.min.js" defer></script>
+
+⸻
+💡 Final Tips:
+* Compress images and minify code regularly.
+* Use lazy loading for off-screen content.
+* Test with Lighthouse after each update.
+
+These optimizations will ensure your GitHub Pages site loads faster and delivers an excellent user experience.
