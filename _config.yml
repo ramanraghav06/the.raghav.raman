@@ -1,6 +1,7 @@
 # _config.yml
 title: "Raghav Raman — Data Engineer"
-url: "https://ramanraghav06.github.io"   # GitHub Pages origin
-baseurl: "/the.raghav.raman"             # project repo path
+description: "SQL, Python, ETL, BigQuery, and cloud analytics portfolio."
+url: "https://ramanraghav06.github.io"       # GitHub Pages origin
+baseurl: "/the.raghav.raman"                 # project path
 plugins:
   - jekyll-seo-tag
